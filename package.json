@@ -1,0 +1,33 @@
+{
+  "name": "raftaarjs",
+  "version": "0.0.1",
+  "description": "light DOM to PWA compiler",
+  "main": "index.js",
+  "scripts": {
+    "start": "owc-dev-server --root-dir ./src/ --port 3000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raftaarjs/raftaarjs.git"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "javascript",
+    "pwa"
+  ],
+  "author": "Gaurav Panchal",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/raftaarjs/raftaarjs/issues"
+  },
+  "homepage": "https://github.com/raftaarjs/raftaarjs#readme",
+  "devDependencies": {
+    "owc-dev-server": "^1.0.1"
+  },
+  "dependencies": {
+    "lit-element": "^2.2.1",
+    "lit-html": "^1.1.1"
+  }
+}
