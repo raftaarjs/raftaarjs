@@ -1,6 +1,19 @@
 # RaftaarJS
 Code in HTML, CSS and Javascript. The PWA is on us.
 
+## Getting Started
+
+Install all the packages
+```
+npm install
+```
+
+Run the web server
+```
+npm start
+```
+
+
 ## Business Benefits
 ### Reduces developer costs and Increases Availability
 Availability of developers increases as the developer only has to know standard javascript feature also we dont have to look for developers with special skill in framework.
