@@ -1,0 +1,18 @@
+<head>
+  <script>
+    var loadScriptAsync = function (uri, id = 'importedScript') {
+      return new Promise((resolve, reject) => {
+        var tag = document.createElement('script');
+        tag.id = id;
+        tag.src = uri;
+        tag.async = true;
+        tag.onload = () => resolve();
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      });
+    }
+    var removeScript = function (id = 'importedScript') {
+      document.getElementById('importedScript').remove();
+    }
+  </script>
+</head>

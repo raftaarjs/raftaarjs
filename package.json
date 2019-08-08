@@ -4,7 +4,9 @@
   "description": "light DOM to PWA compiler",
   "main": "index.js",
   "scripts": {
-    "start": "owc-dev-server --root-dir ./src/ --port 3000",
+    "start": "es-dev-server --root-dir ./dist/ --node-resolve --port 3000",
+    "build": "node index.js",
+    "build:start": "npm run build && npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,7 +26,11 @@
   },
   "homepage": "https://github.com/raftaarjs/raftaarjs#readme",
   "devDependencies": {
-    "owc-dev-server": "^1.0.1"
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "es-dev-server": "^1.10.4",
+    "puppeteer": "^1.19.0"
   },
   "dependencies": {
     "lit-element": "^2.2.1",
