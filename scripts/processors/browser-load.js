@@ -2,15 +2,15 @@ const puppeteer = require('puppeteer');
 var path = require("path");
 var absolutePath = path.resolve("./load.html");
 const fs = require('fs');
-const jsChunk = fs.readFileSync(process.argv[2] || './sample/app-shell.js', 'utf8');
+// import regeneratorRuntime from "regenerator-runtime";
+// import "regenerator-runtime/runtime";
 
 
-
-function browserPageLoad() {
-  let processPage = {
-    jsChunk,
-    url: process.argv[2] || './sample/app-shell.js'
-  };
+function browserPageLoad(processPage) {
+  // let processPage = {
+  //   jsRaw,
+  //   filePath: process.argv[2] || './sample/app-shell.js'
+  // };
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -30,11 +30,15 @@ function browserPageLoad() {
           var type = typeof obj;
           return type === 'object' && !!obj;
         }
+        let windowPropsString = ''
+        for (let prop in window) {
+          windowPropsString += prop + ' ';
+        }
 
-        function iterationCopy(src, skipJunk = true, jsChunk = '') {
+        function iterationCopy(src, skipJunk = true, jsRaw = '') {
           let target = { constructor: {}, functions: {} };
           for (let prop in src) {
-            if (src.hasOwnProperty(prop) && (skipJunk || jsChunk.indexOf(prop) > 0)) {
+            if (src.hasOwnProperty(prop) && (skipJunk || (jsRaw.indexOf(prop) > 0 && windowPropsString.indexOf(prop) < 0))) {
               // if the value is a nested object, recursively copy all it's properties
               if (isFunction(src[prop])) {
                 target.functions[prop] = src[prop].toString();
@@ -49,8 +53,8 @@ function browserPageLoad() {
         }
 
         let outputObj = []
-        return window.loadScriptAsync(processPage.url)
-          .then(() => iterationCopy(window, false, processPage.jsChunk))
+        return window.loadScriptAsync(processPage.filePath)
+          .then(() => iterationCopy(window, false, processPage.jsRaw))
           .finally(() => window.removeScript());
       }, processPage);
       await browser.close();
@@ -60,4 +64,5 @@ function browserPageLoad() {
     }
   });
 }
-browserPageLoad().then((res) => console.log(res));
+
+module.exports = { browserPageLoad };

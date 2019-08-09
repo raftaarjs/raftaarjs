@@ -1,43 +1,54 @@
 
-import { LitElement, html, css } from 'lit-element';
+    import { LitElement, html, css } from 'lit-element';
 
-// 
+    // 
 
-class AppShell extends LitElement {
+    class AppShell extends LitElement {
 
-  static get styles() {
-    return [
-      css`
-        h1 {
-          text-align: center;
-        }
-      `,
-    ];
-  }
-
-  render() {
-    return html`
-          <h1>Welcome to Dark Web</h1>
-          <p>${this.subtitle}</p>
-        `;
-  }
-
-  //       this.subtitle = 'It is very dark here';
-  // this.numeric = 123;
-
-  // this.obja = { d: 'a', c: this.numeric };
-  // this.aara = [1, 2, 3, 4, 5];
-  // this.stringArra = ['dennis', 'the', 'menance'];
-
-  // this.onWebsiteEnter = () => {
-  //   return this.onWebsiteEnterEs5;
-  // }
-
-  // this.onWebsiteEnterEs5 = function () {
-  //   return 'some content';
-  // }
-
-
+      static get styles() {
+        return [
+          css`
+            ul {
+  padding: 40px;
 }
+          `,
+        ];
+      }
 
-customElements.define('app-shell', AppShell);
+      render() {
+        return html`
+          <h1>Books</h1>
+<ul id="myBooks">${this.books.map(book => html`<li>${book.title} - ${book.pages}</li>`)}</ul>
+        `;
+      }
+      
+        
+    static get properties() {
+      return {
+         books: Object,
+      
+      };
+    }
+
+    constructor(){
+      super();
+      
+  
+   this.books = [{"title":"Game of Thrones","pages":697},{"title":"The Ice Dragon","pages":521}];
+    
+    }
+  
+        
+   myFunc()  {
+  console.log(this.shadowRoot.getElementById('myBooks'));
+}
+       connectedCallback()  {
+        super.connectedCallback();
+  this.myFunc();
+}
+      
+      
+    }
+
+    customElements.define('app-shell', AppShell);
+  

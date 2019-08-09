@@ -1,2 +1,2 @@
-<h1>Welcome to Dark Web</h1>
-<p>${this.subtitle}</p>
+<h1>Books</h1>
+<ul>${this.books.map(book => html`<li>${book.title} - ${book.pages}</li>`)}</ul>

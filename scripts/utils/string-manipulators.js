@@ -1,23 +1,25 @@
 
-  export function camelCase(str) {
+  function camelCase(str) {
     return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
   }
 
-  export function defaultCamelCase(str) {
+  function defaultCamelCase(str) {
     return camelCase(componentizeName(str));
   }
 
-  export function componentizeName(str) {
+  function componentizeName(str) {
     if (str.indexOf('-') > 0) {
       return str;
     }
     return 'app-' + str;
   }
 
-  export function getFileExtension(filename) {
+  function getFileExtension(filename) {
     return filename.split('.').pop();
   }
 
-  export function getFilenamePrefix(filename) {
+  function getFilenamePrefix(filename) {
     return filename.split('.').shift();
   }
+
+  module.exports = { camelCase, defaultCamelCase, componentizeName, getFileExtension, getFilenamePrefix };

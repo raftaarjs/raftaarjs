@@ -1,14 +1,12 @@
-this.subtitle = 'It is very dark here';
-this.numeric = 123;
+var books = [
+  { title: 'Game of Thrones', pages: 697 },
+  { title: 'The Ice Dragon', pages: 521 }
+];
 
-this.obja = { d:'a', c: this.numeric };
-this.aara = [1,2,3,4,5];
-this.stringArra = ['dennis', 'the', 'menance'];
-
-this.onWebsiteEnter = () => {
-    return this.onWebsiteEnterEs5;
+this.myFunc = () => {
+  console.log(document.getElementById('myBooks'));
 }
 
-this.onWebsiteEnterEs5 = function() {
-    return 'some content';
+this.connectedCallback = () => {
+  this.myFunc();
 }
