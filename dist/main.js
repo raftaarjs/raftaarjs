@@ -11,21 +11,31 @@
             ul {
   padding: 40px;
 }
+
+input, button {
+    padding: var(--base-input-padding);
+}
           `,
         ];
       }
 
       render() {
         return html`
-          <h1>Books</h1>
-<ul id="myBooks">${this.books.map(book => html`<li>${book.title} - ${book.pages}</li>`)}</ul>
+          <h1>Users</h1>
+<input id="usernameInput" name="username">
+      <button @click="${() => this._addUsername()}">Add user</button>
+      <ul>
+        ${this.users.map(user => html`
+          <li>${user}</li>
+        `)}
+      </ul>
         `;
       }
       
         
     static get properties() {
       return {
-         books: Object,
+         users: Object,
       
       };
     }
@@ -34,17 +44,19 @@
       super();
       
   
-   this.books = [{"title":"Game of Thrones","pages":697},{"title":"The Ice Dragon","pages":521}];
+   this.users = ["steve"];
     
     }
   
         
-   myFunc()  {
-  console.log(this.shadowRoot.getElementById('myBooks'));
+   _addUsername()  {
+  this.users = [...this.users, this.usernameInput().value];
+
+  // Use the input getter and clear the value
+  this.usernameInput().value = '';
 }
-       connectedCallback()  {
-        super.connectedCallback();
-  this.myFunc();
+       usernameInput()  {
+  return this.shadowRoot.getElementById('usernameInput');
 }
       
       

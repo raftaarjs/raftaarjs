@@ -1,3 +1,7 @@
 ul {
   padding: 40px;
 }
+
+input, button {
+    padding: var(--base-input-padding);
+}

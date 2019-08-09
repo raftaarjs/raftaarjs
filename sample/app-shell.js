@@ -1,12 +1,12 @@
-var books = [
-  { title: 'Game of Thrones', pages: 697 },
-  { title: 'The Ice Dragon', pages: 521 }
-];
+this.users = ['steve'];
 
-this.myFunc = () => {
-  console.log(document.getElementById('myBooks'));
+this._addUsername = () => {
+  this.users = [...this.users, this.usernameInput().value];
+
+  // Use the input getter and clear the value
+  this.usernameInput().value = '';
 }
 
-this.connectedCallback = () => {
-  this.myFunc();
+this.usernameInput = () => {
+  return this.shadowRoot.getElementById('usernameInput');
 }
