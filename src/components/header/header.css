@@ -2,11 +2,16 @@
   box-sizing: border-box;
 }
 
-nav {
+nav,
+nav ul,
+nav ul>li>a {
   background-color: crimson;
+}
+nav {
   min-height: 50px;
   color: #fff;
   border-bottom: darkred;
+  margin-bottom: 20px;
 }
 
 brand {
