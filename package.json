@@ -4,9 +4,10 @@
   "description": "light DOM to PWA compiler",
   "main": "index.js",
   "scripts": {
-    "start": "es-dev-server --root-dir ./dist/ --node-resolve --port 3000",
-    "build": "node index.js",
-    "build:start": "npm run build && npm start",
+    "start": "concurrently \"npm run build:watch\" \"npm run serve\"",
+    "serve": "es-dev-server",
+    "build": "node ./",
+    "build:watch": "watch \"npm run build\" ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,16 +27,15 @@
   },
   "homepage": "https://github.com/raftaarjs/raftaarjs#readme",
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
+    "concurrently": "^4.1.1",
     "es-dev-server": "^1.10.4",
+    "ncp": "^2.0.0",
     "puppeteer": "^1.19.0",
-    "regenerator-runtime": "^0.13.3"
+    "watch": "^1.0.2"
   },
   "dependencies": {
+    "@vaadin/router": "^1.2.1",
+    "dimport": "^1.0.0",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.1"
   }

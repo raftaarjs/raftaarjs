@@ -1,6 +1,5 @@
-// import { defaultCamelCase, componentizeName, getFileExtension, getFilenamePrefix }  from '../utils/string-manipulators';
-// import { readDirs }  from './directory-structure';
-let { defaultCamelCase, componentizeName, getFileExtension, getFilenamePrefix } = require('../utils/string-manipulators');
+let { defaultPascalCase, componentizeName, getFileExtension, getFilenamePrefix } = require('../utils/string-manipulators');
+
 let { readDirs } = require('./directory-structure');
 
 function getAppObjectList(config) {
@@ -20,7 +19,7 @@ function getAppObjectList(config) {
   }
   
   function commonAttrib(currentComponent, cName) {
-    currentComponent.className = defaultCamelCase(cName);
+    currentComponent.className = defaultPascalCase(cName);
     currentComponent.tagName = componentizeName(cName);
   }
   
@@ -28,17 +27,14 @@ function getAppObjectList(config) {
   
     currentComponent.type = 'folder';
     commonAttrib(currentComponent, cName)
-    currentComponent.fileTypes = {}
+    currentComponent.fileTypes = { html:[], css:[], js:[] };
     for (let entry in dirStat[entries]) {
       let { fileTypes } = currentComponent;
-      fileTypes.js = fileTypes.css = fileTypes.html = [];
       if (getFileExtension(entry) === 'js') {
         fileTypes.js.push(dirStat[entries][entry]);
-      }
-      if (getFileExtension(entry) === 'css') {
+      } else if (getFileExtension(entry) === 'css') {
         fileTypes.css.push(dirStat[entries][entry]);
-      }
-      if (getFileExtension(entry) === 'html') {
+      } else if (getFileExtension(entry) === 'html') {
         fileTypes.html.push(dirStat[entries][entry]);
       }
     }

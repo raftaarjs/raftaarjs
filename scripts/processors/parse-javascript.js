@@ -1,80 +1,62 @@
-// import { readFile } from '../utils/readers';
-// import { browserPageLoad } from './browser-load';
 let { readFile } = require('../utils/readers');
+let { writeTempFile } = require('../utils/writers');
 let { browserPageLoad } = require('./browser-load');
 
 
 function prepareJS(filePath) {
   let jsRaw = readFile(filePath);
   return new Promise(async (resolve, reject) => {
-    
-    let { importChunk} = getImportLines(jsRaw);
+
+    let importChunk = getImportLines(jsRaw);
     let nonImportJS = jsRaw.replace(/^import .*$/m, '');
-    let jsChunk = ``;
-    console.log(jsRaw);
-    console.log('====================================');
-    console.log(nonImportJS);
-    browserPageLoad({ jsRaw, filePath }).then((jsObj) => {
-      let jsCnstr = createConstructor(jsObj.constructor);
+    let tempFilePath = await writeTempFile(filePath, nonImportJS);
 
-      let jsFuncs = sortFunctions(jsObj.functions);
+    browserPageLoad({ jsRaw: nonImportJS, filePath: tempFilePath })
+      .then((jsObj) => {
+        let { jsProps, jsCnstrAttribs } = createConstructor(jsObj.constructor);
 
-      jsChunk = `
-        ${jsCnstr}
-        ${jsFuncs}
-      `;
+        let jsFuncs = sortFunctions(jsObj.functions);
 
-      return resolve(jsChunk);
-    });
+        parsedJS = { importChunk, jsProps, jsCnstrAttribs, jsFuncs };
+
+        return resolve(parsedJS);
+      });
   });
 }
 
 function createConstructor(cnstr) {
-  let attribList = `
-  
-  `;
-  let propertiesList = ``;
+  let jsCnstrAttribs = ``;
+  let jsProps = ``;
   for (let attr in cnstr) {
     if (typeof cnstr[attr] === 'object') {
-      propertiesList += ` ${attr}: Object,
+      jsProps += ` ${attr}: Object,
       `
-      attribList += ` this.${attr} = ${JSON.stringify(cnstr[attr])};
+      jsCnstrAttribs += ` this.${attr} = ${JSON.stringify(cnstr[attr])};
     `;
     } else if (Array.isArray(cnstr[attr])) {
-      propertiesList += ` ${attr}: Array,
+      jsProps += ` ${attr}: Array,
       `
-      attribList += ` this.${attr} = ${JSON.stringify(cnstr[attr])};
+      jsCnstrAttribs += ` this.${attr} = ${JSON.stringify(cnstr[attr])};
     `;
     } else if (typeof cnstr[attr] === 'number') {
-      propertiesList += ` ${attr}: Number,
+      jsProps += ` ${attr}: Number,
       `
-      attribList += ` this.${attr} = ${cnstr[attr]};
+      jsCnstrAttribs += ` this.${attr} = ${cnstr[attr]};
     `;
     } else if (typeof cnstr[attr] === 'boolean') {
-      propertiesList += ` ${attr}: Boolean,
+      jsProps += ` ${attr}: Boolean,
       `
-      attribList += ` this.${attr} = ${cnstr[attr]};
+      jsCnstrAttribs += ` this.${attr} = ${cnstr[attr]};
     `;
     } else {
-      propertiesList += ` ${attr}: String,
+      jsProps += ` ${attr}: String,
       `
-      attribList += ` this.${attr} = '${cnstr[attr]}';
+      jsCnstrAttribs += ` this.${attr} = '${cnstr[attr]}';
     `;
     }
   }
 
-  return `
-    static get properties() {
-      return {
-        ${propertiesList}
-      };
-    }
-
-    constructor(){
-      super();
-      ${attribList}
-    }
-  `;
+  return { jsProps, jsCnstrAttribs };
 }
 
 function sortFunctions(funcs) {
@@ -112,23 +94,19 @@ function removeFirstFunctionString(str) {
 }
 
 function removeFirstArrowString(str) {
-  // if (str.match(/=>.*=>/)) { // Check if there are 2 commas
-  str = str.replace(/=>/g, ''); // Remove the first one
-  // }
+  str = str.replace(/=>/g, ''); 
+  return str;
 }
 
 function getImportLines(str) {
   var lines = str.split('\n');
-  let nonImportJS = '';
-  let importChunk = '';
+  let importChunk = [];
   lines.forEach(line => {
-    if(line.indexOf('import ') >= 0) {
-      importChunk += line + '\n';
-    } else {
-      nonImportJS += line;
-    }
+    if (line.indexOf('import ') >= 0) {
+      importChunk.push(`${line}`);
+    } 
   });
-  return { importChunk, nonImportJS };
+  return importChunk;
 }
 
 function shadoDomize(curFunc) {

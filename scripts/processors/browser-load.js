@@ -1,28 +1,19 @@
 const puppeteer = require('puppeteer');
-var path = require("path");
-var absolutePath = path.resolve("./load.html");
 const fs = require('fs');
-// import regeneratorRuntime from "regenerator-runtime";
-// import "regenerator-runtime/runtime";
+var path = require("path");
 
+var absolutePath = path.resolve("./load.html");
 
 function browserPageLoad(processPage) {
-  // let processPage = {
-  //   jsRaw,
-  //   filePath: process.argv[2] || './sample/app-shell.js'
-  // };
-
   return new Promise(async (resolve, reject) => {
     try {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
       await page.goto('file://' + absolutePath);
 
-      // Get the "viewport" of the page, as reported by the page.
       const pageData = await page.evaluate((processPage) => {
         function isFunction(obj) {
           var type = typeof obj;
-          // return type === 'function' || type === 'object' && !!obj;
           return type === 'function' && !!obj;
         }
 

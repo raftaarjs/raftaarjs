@@ -1,0 +1,27 @@
+:host * {
+    box-sizing: border-box;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 750px;
+    padding: 0 15px;
+    width: 100%;
+}
+
+::slotted(p) {
+    font-size: 18px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    text-align: justify;
+}
+
+::slotted(blockquote) {
+    font-size: 22px;
+    line-height: 1.5;
+    background: #f9f9f9;
+    border-left: 10px solid #ccc;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
+}
+

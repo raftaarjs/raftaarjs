@@ -1,0 +1,22 @@
+[
+  {
+    "path": "/",
+    "component": "app-home"
+  },
+  {
+    "path": "/moto",
+    "component": "app-moto"
+  },
+  {
+    "path": "/authors",
+    "component": "app-authors"
+  },
+  {
+    "path": "/contact",
+    "component": "app-contact"
+  },
+  {
+    "path": "(.*)",
+    "redirect": "/"
+  }
+]

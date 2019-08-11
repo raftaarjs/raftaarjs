@@ -1,0 +1,12 @@
+<nav>
+    <div class="container">
+        <brand>${this.brand}</brand>
+        <ul>
+            ${this.navlinks.map(navlink => html`<li><a href="${navlink.url}" class="${this._checkPath(navlink.url, location.pathname)}">${navlink.name}</a></li>`)}
+        </ul>
+    </div>
+</nav>
+
+<slot></slot>
+
+<footer></footer>

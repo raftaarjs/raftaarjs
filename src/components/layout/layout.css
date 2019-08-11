@@ -16,7 +16,7 @@ brand {
 
 .container {
   margin: 0 auto;
-  max-width: 970px;
+  max-width: 1200px;
   padding: 0 15px;
   width: 100%;
 }
@@ -29,8 +29,8 @@ ul {
 
 ul>li {
   display: inline-block;
-  padding-right: 0px;
-  padding-left: 0px;
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 ul>li>a,
@@ -40,7 +40,6 @@ ul>li>a:hover {
   text-decoration: none;
 }
 
-ul>li>a.active,
 ul>li>a:hover {
   background-color: darkred;
 }

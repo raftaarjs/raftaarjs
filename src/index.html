@@ -1,18 +1,30 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="Description" content="Put your description here.">
+  <link rel="manifest" href="/manifest.json"> 
+  <meta name="theme-color" content="#1976D3">
   <title>Raftaar JS</title>
 
   <link href="./assets/css/styles.css" rel="stylesheet">
 
 </head>
+
 <body>
+  <noscript>
+    <strong>
+      We're sorry but this website doesn't work properly without JavaScript enabled. Please enable it
+      to continue.
+    </strong>
+  </noscript>
   <app-shell></app-shell>
 
-  <script type="module" src="./assets/js/main.js"></script>
+  <script src="./assets/js/main.js"></script>
+  <script type="module" src="./app-shell.js"></script>
+  <script src="./service-worker.js"></script>
 </body>
 
 </html>

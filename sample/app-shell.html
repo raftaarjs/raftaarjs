@@ -1,6 +1,0 @@
-<h1>Users</h1>
-<input id="usernameInput" name="username">
-<button @click="${() => this._addUsername()}">Add user</button>
-<ul>
-    ${this.users.map(user => html`<li>${user}</li>`)}
-</ul>

@@ -1,0 +1,10 @@
+<app-content .title="Contact">
+    <p>
+        Please Provide your email and we will get back to you.
+    </p>
+    <input id="emailInput" name="email">
+    <button @click="${() => this._addEmail()}">Submit</button>
+    <ul>
+        ${this.emails.map(email => html`<li>${email}</li>`)}
+    </ul>
+</app-content>
