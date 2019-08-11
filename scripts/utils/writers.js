@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 var ncp = require('ncp').ncp;
 
+const { readFile } = require('./readers');
+
 function writeComponent(filePath, component, log = true) {
   fs.writeFile(filePath, component, function (err) {
     if (err) {
@@ -25,11 +27,17 @@ function copyAssets(source, destination, buildComponentsDir) {
   copyRootFiles('assets/', source, destination);
 
   try {
+    if (!fs.existsSync('./dist')) {
+      fs.mkdirSync('./dist', { recursive: true })
+    }
     if (!fs.existsSync(buildComponentsDir)) {
-      fs.mkdir(buildComponentsDir)
+      fs.mkdirSync(buildComponentsDir, { recursive: true })
     }
     if (!fs.existsSync('./.temp')) {
-      fs.mkdir('./.temp')
+      fs.mkdirSync('./.temp', { recursive: true })
+    }
+    if (!fs.existsSync('./.temp/components')) {
+      fs.mkdirSync('./.temp/components', { recursive: true })
     }
   } catch (err) {
     console.error(err)
@@ -44,6 +52,32 @@ function copyRootFiles(filename, source, destination, log = true) {
     if (err) throw err;
     if(log) console.log('Copied ' + filename);
   });
+}
+
+function copyModules(log = true) {
+
+  if (!fs.existsSync('./dist/node_modules')) {
+    fs.mkdirSync('./dist/node_modules', { recursive: true })
+  }
+
+  let packagesFile = JSON.parse(readFile('./package.json'));
+  const { dependencies } = packagesFile;
+  for(let dependency in dependencies) {
+    
+    let src = path.join('./node_modules', dependency);
+    let dist = path.join('./dist/node_modules', dependency);
+
+    if(dependency.charAt() === '@') {
+      dpdDirs = dependency.split('/');
+      src = path.join('./node_modules', dpdDirs[0]);
+      dist = path.join('./dist/node_modules', dpdDirs[0]);
+    }
+
+    ncp(src, dist, (err) => {
+      if (err) throw err;
+      if(log) console.log('Copied Module ' + dependency);
+    });
+  }
 }
 
 function writeTempFile(filePath, rawText, prefix = 'src') {
@@ -68,4 +102,4 @@ function writeTempFile(filePath, rawText, prefix = 'src') {
   });
 }
 
-module.exports = { writeComponent, copyAssets, writeTempFile };
+module.exports = { writeComponent, copyAssets, copyModules, writeTempFile };
