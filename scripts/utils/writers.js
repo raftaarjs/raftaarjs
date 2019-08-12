@@ -54,17 +54,6 @@ function copyRootFiles(filename, source, destination, log = true) {
   });
 }
 
-function copyModules(log = true) {
-
-  if (!fs.existsSync('./dist/web_modules') && fs.existsSync('./web_modules')) {
-    
-    ncp('./web_modules/', './dist/web_modules/', (err) => {
-      if (err) throw err;
-      if (log) console.log('Copied Modules');
-    });
-  }
-}
-
 function writeTempFile(filePath, rawText, prefix = 'src') {
   let tempFilePath = filePath.replace(prefix, '.temp');
   let tempFileDir = path.dirname(tempFilePath);
@@ -87,4 +76,4 @@ function writeTempFile(filePath, rawText, prefix = 'src') {
   });
 }
 
-module.exports = { writeComponent, copyAssets, copyModules, writeTempFile };
+module.exports = { writeComponent, copyAssets, writeTempFile };

@@ -8,8 +8,8 @@
     "serve": "es-dev-server --open",
     "build": "node ./",
     "build:watch": "watch \"npm run build\" ./src",
-    "prepare": "pika install",
-    "clean": "rm -rf node_modules/ dist/ .temp/ web_modules/",
+    "prepare": "pika install --optimize --clean --no-source-map --dest ./dist/web_modules/",
+    "clean": "rm -rf node_modules/ dist/ .temp/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -8,12 +8,10 @@ let { prepareRouter } = require('../parsers/parse-router');
 let { prepareComponent } = require('../parsers/parse-component');
 let { processHTML, processCSS, processJS, buildShell } = require('./build-lit');
 let { processRouter } = require('./build-vaadin-router');
-let { writeComponent, copyAssets, copyModules } = require('../utils/writers');
+let { writeComponent, copyAssets } = require('../utils/writers');
 
 function startBuild(config) {
   copyAssets(config.sourceDir, config.buildDir, config.buildComponentsDir);
-
-  copyModules();
 
   compileComponents(config);
 
