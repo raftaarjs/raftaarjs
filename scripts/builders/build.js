@@ -1,11 +1,11 @@
 let path = require("path");
 
 let { getAppObjectList } = require('../structures/app-structure');
-let { prepareHTML } = require('../processors/parse-html');
-let { prepareCSS } = require('../processors/parse-css');
-let { prepareJS } = require('../processors/parse-javascript');
-let { prepareRouter } = require('../processors/parse-router');
-let { prepareComponent } = require('../processors/parse-component');
+let { prepareHTML } = require('../parsers/parse-html');
+let { prepareCSS } = require('../parsers/parse-css');
+let { prepareJS } = require('../parsers/parse-javascript');
+let { prepareRouter } = require('../parsers/parse-router');
+let { prepareComponent } = require('../parsers/parse-component');
 let { processHTML, processCSS, processJS, buildShell } = require('./build-lit');
 let { processRouter } = require('./build-vaadin-router');
 let { writeComponent, copyAssets, copyModules } = require('../utils/writers');

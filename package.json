@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run build:watch\" \"npm run serve\"",
-    "serve": "es-dev-server",
+    "serve": "es-dev-server --open",
     "build": "node ./",
     "build:watch": "watch \"npm run build\" ./src",
+    "prepare": "pika install",
+    "clean": "rm -rf node_modules/ dist/ .temp/ web_modules/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,6 +29,7 @@
   },
   "homepage": "https://github.com/raftaarjs/raftaarjs#readme",
   "devDependencies": {
+    "@pika/web": "^0.5.1",
     "concurrently": "^4.1.1",
     "es-dev-server": "^1.10.4",
     "ncp": "^2.0.0",

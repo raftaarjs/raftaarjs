@@ -9,7 +9,7 @@ function writeComponent(filePath, component, log = true) {
     if (err) {
       console.log(err);
     } else {
-      if(log) console.log(`Component ${filePath} written`);
+      if (log) console.log(`Component ${filePath} written`);
     }
   });
 }
@@ -50,32 +50,17 @@ function copyRootFiles(filename, source, destination, log = true) {
 
   ncp(src, dist, (err) => {
     if (err) throw err;
-    if(log) console.log('Copied ' + filename);
+    if (log) console.log('Copied ' + filename);
   });
 }
 
 function copyModules(log = true) {
 
-  if (!fs.existsSync('./dist/node_modules')) {
-    fs.mkdirSync('./dist/node_modules', { recursive: true })
-  }
-
-  let packagesFile = JSON.parse(readFile('./package.json'));
-  const { dependencies } = packagesFile;
-  for(let dependency in dependencies) {
+  if (!fs.existsSync('./dist/web_modules') && fs.existsSync('./web_modules')) {
     
-    let src = path.join('./node_modules', dependency);
-    let dist = path.join('./dist/node_modules', dependency);
-
-    if(dependency.charAt() === '@') {
-      dpdDirs = dependency.split('/');
-      src = path.join('./node_modules', dpdDirs[0]);
-      dist = path.join('./dist/node_modules', dpdDirs[0]);
-    }
-
-    ncp(src, dist, (err) => {
+    ncp('./web_modules/', './dist/web_modules/', (err) => {
       if (err) throw err;
-      if(log) console.log('Copied Module ' + dependency);
+      if (log) console.log('Copied Modules');
     });
   }
 }
@@ -98,7 +83,7 @@ function writeTempFile(filePath, rawText, prefix = 'src') {
       if (err) console.log(err);
       return resolve(tempFilePath);
     });
-      
+
   });
 }
 

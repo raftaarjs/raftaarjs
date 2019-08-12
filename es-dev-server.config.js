@@ -4,5 +4,5 @@ module.exports = {
   nodeResolve: true,
   rootDir: 'dist/',
   appIndex: 'index.html',
-  moduleDirs: ['node_modules', 'web_modules']
+  moduleDirs: ['web_modules']
 }

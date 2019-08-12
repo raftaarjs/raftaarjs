@@ -35,6 +35,7 @@ dist/
 .temp/
 # Dependency directories
 node_modules/
+web_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files

@@ -22,7 +22,7 @@ Availability of developers increases as the developer only has to know standard 
 Code deliverabilty becomes fast as any developer knowning javascript can jump in.
 
 ### Delivers best technology in market ... Always
-Gives the fastest performance in market due to web components and native javascipt. No more bundle with framework JS. Furthermore, the compiler will always keep everything in latest technology.
+Gives the fastest performance in market due to web components and native JavaScript. No more bundle with framework JS. Furthermore, the compiler will always keep everything in latest technology.
 
 ### Save development time of other developers and projects
 functions in code are portable to other framework as everything is writtern in basic javascript (The code is reusable to support other projects).
