@@ -77,7 +77,7 @@ function sortFunctions(funcs) {
       functionList += ` ${curFunc}
       `;
     } else {
-      curFunc = curFunc.replace(/=>/g, "");
+      curFunc = removeFirstArrowString(curFunc);
       functionList += ` ${func}${curFunc}
       `;
     }
@@ -94,7 +94,7 @@ function removeFirstFunctionString(str) {
 }
 
 function removeFirstArrowString(str) {
-  str = str.replace(/=>/g, ''); 
+  str = str.replace('=>', ''); 
   return str;
 }
 
