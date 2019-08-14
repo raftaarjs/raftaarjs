@@ -8,8 +8,9 @@ function prepareJS(filePath) {
   return new Promise(async (resolve, reject) => {
 
     let importChunk = getImportLines(jsRaw);
-    let nonImportJS = jsRaw.replace(/^import .*$/mg, '');
-    let tempFilePath = await writeTempFile(filePath, nonImportJS);
+    let nonImportJS = jsRaw.trim().replace(/import .*$/mg, '');
+    let sanitizeFilePath = filePath.replace(/.js/, '-sanitized.js');
+    let tempFilePath = await writeTempFile(sanitizeFilePath, nonImportJS);
 
     browserPageLoad({ jsRaw: nonImportJS, filePath: tempFilePath })
       .then((jsObj) => {

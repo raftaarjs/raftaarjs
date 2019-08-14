@@ -52,7 +52,7 @@ function prepareComponent({ componentAttribs, FrontendFramework, importChunk, ht
     if (Array.isArray(importChunk)) {
       ImportLines = '';
       importChunk.forEach(anImport => {
-        ImportLines += anImport + `;
+        ImportLines += anImport + `
         `;
       });
       return ImportLines;

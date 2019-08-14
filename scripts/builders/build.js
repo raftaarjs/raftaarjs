@@ -6,6 +6,7 @@ let { prepareCSS } = require('../parsers/parse-css');
 let { prepareJS } = require('../parsers/parse-javascript');
 let { prepareRouter } = require('../parsers/parse-router');
 let { prepareComponent } = require('../parsers/parse-component');
+let { prepareCodeSplit } = require('../parsers/code-splitter');
 let { processHTML, processCSS, processJS, buildShell } = require('./build-lit');
 let { processRouter } = require('./build-vaadin-router');
 let { getFileExtension } = require('../utils/string-manipulators');
@@ -22,22 +23,34 @@ function startBuild(config) {
 function compileComponents(config) {
   let appObjectList = getAppObjectList(config);
 
-  for(appObjectKey in appObjectList) {
-    let appObject = appObjectList[appObjectKey];
-    if(appObject.type === 'folder') {
-      const filePath = path.join(config.buildComponentsDir, `${appObject.tagName}.js`);
+  for (appObjectKey in appObjectList) {
+    const appObject = appObjectList[appObjectKey];
+    const filePath = path.join(config.buildComponentsDir, `${appObject.tagName}.js`);
+
+    if (appObject.type === 'folder') {
       compileFolderComponents(appObject, filePath);
-    } else if(appObject.type === 'file' && (getFileExtension(appObject.fileMap) === 'js' || getFileExtension(appObject.fileMap) === 'mjs')) {
-      compileJSFileComponent(appObject.fileMap, config)
+    } else if (appObject.type === 'file' && (getFileExtension(appObject.fileMap) === 'js' || getFileExtension(appObject.fileMap) === 'mjs')) {
+      compileJSFileComponent(appObject.fileMap, config);
+    } else if (appObject.type === 'file' && (getFileExtension(appObject.fileMap) === 'html' || getFileExtension(appObject.fileMap) === 'htm')) {
+      compileHTMLFileComponent(appObject, filePath, config.componentsDir);
     }
   }
 }
 
 function compileFolderComponents(appObject, filePath) {
   const { className, tagName } = appObject;
-    
+
   collectResource(appObject.fileTypes)
-    .then(chunks => prepareComponent(Object.assign(chunks, {componentAttribs: { className, tagName }})))
+    .then(chunks => prepareComponent(Object.assign(chunks, { componentAttribs: { className, tagName } })))
+    .then(component => writeComponent(filePath, component));
+}
+
+function compileHTMLFileComponent(appObject, filePath, componentsDir) {
+  let { className, tagName, fileMap: srcFilePath } = appObject;
+
+  prepareCodeSplit(srcFilePath, tagName, componentsDir)
+    .then((fileTypes) => collectResource(fileTypes))
+    .then(chunks => prepareComponent(Object.assign(chunks, { componentAttribs: { className, tagName } })))
     .then(component => writeComponent(filePath, component));
 }
 
@@ -58,7 +71,7 @@ function collectResource(fileTypes) {
     let htmlChunk = '', cssChunk = '', jsChunk = '', importChunk = '';
     let htmlPromise = fileTypes.html[0] ? collectHTML(fileTypes.html[0]).then(chunk => htmlChunk = chunk) : '';
     let cssPromise = fileTypes.css[0] ? collectCSS(fileTypes.css[0]).then(chunk => cssChunk = chunk) : '';
-    let jsPromise = fileTypes.js[0] ? collectJS(fileTypes.js[0]).then(chunk => { jsChunk = chunk.jsChunk; importChunk = chunk.importChunk}) : '';
+    let jsPromise = fileTypes.js[0] ? collectJS(fileTypes.js[0]).then(chunk => { jsChunk = chunk.jsChunk; importChunk = chunk.importChunk }) : '';
 
     Promise.all([htmlPromise, cssPromise, jsPromise])
       .then(() => resolve({ htmlChunk, cssChunk, jsChunk, importChunk }))

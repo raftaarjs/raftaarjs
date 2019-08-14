@@ -1,0 +1,15 @@
+<app-content .title=${this.title}>
+  <ul>
+    ${this.authors.map(author => html`<li>${author.name} - <a href="${author.url}">@${author.handle}</a></li>`)}
+  </ul>
+</app-content>
+
+<script>
+  import './app-content.js';
+
+  this.title = 'Authors';
+
+  this.authors = [
+    { name: 'Gaurav Panchal', handle: 'grvpanchal', url: 'http://github.com/grvpanchal' }
+  ];
+</script>

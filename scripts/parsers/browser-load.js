@@ -43,7 +43,6 @@ function browserPageLoad(processPage) {
           return target;
         }
 
-        let outputObj = []
         return window.loadScriptAsync(processPage.filePath)
           .then(() => iterationCopy(window, false, processPage.jsRaw))
           .finally(() => window.removeScript());

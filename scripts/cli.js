@@ -4,7 +4,7 @@ const commandLineUsage = require('command-line-usage');
 let path = require("path");
 const config = require('./config');
 let { getAppObjectList } = require('./structures/app-structure');
-let { compileFolderComponents } = require('./builders/build');
+let { startBuild, compileFolderComponents } = require('./builders/build');
 
 const mainDefinitions = [
   { name: 'action', defaultOption: true }
@@ -39,6 +39,9 @@ if (mainCommand.action === 'help') {
   process.exit();
 }
 
+if (mainCommand.action === 'build') {
+  startBuild(config);
+}
 
 if (mainCommand.action === 'eject') {
   const actionDefinitions = [

@@ -28,18 +28,10 @@ function copyAssets(config) {
   copyRootFiles('assets/', source, destination);
 
   try {
-    if (!fs.existsSync(destination)) {
-      fs.mkdirSync(destination, { recursive: true })
-    }
-    if (!fs.existsSync(componentsDir)) {
-      fs.mkdirSync(componentsDir, { recursive: true })
-    }
-    if (!fs.existsSync('./.temp')) {
-      fs.mkdirSync('./.temp', { recursive: true })
-    }
-    if (!fs.existsSync('./.temp/components')) {
-      fs.mkdirSync('./.temp/components', { recursive: true })
-    }
+    createDir(destination);
+    createDir(componentsDir);
+    createDir('./.temp');
+    createDir('./.temp/components');
   } catch (err) {
     console.error(err)
   }
@@ -87,4 +79,10 @@ function writeTempFile(filePath, rawText, prefix = 'src') {
   });
 }
 
-module.exports = { writeComponent, copyAssets, writeTempFile, copyJSFiles };
+function createDir(dir) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true })
+  }
+}
+
+module.exports = { writeComponent, createDir, copyAssets, writeTempFile, copyJSFiles };

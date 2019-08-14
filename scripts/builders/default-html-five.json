@@ -1,0 +1,186 @@
+{
+  "booleanAttributes": [
+    "async",
+    "autocomplete",
+    "autofocus",
+    "autoplay",
+    "border",
+    "challenge",
+    "checked",
+    "compact",
+    "contenteditable",
+    "controls",
+    "default",
+    "defer",
+    "disabled",
+    "formNoValidate",
+    "frameborder",
+    "hidden",
+    "indeterminate",
+    "ismap",
+    "loop",
+    "multiple",
+    "muted",
+    "nohref",
+    "noresize",
+    "noshade",
+    "novalidate",
+    "nowrap",
+    "open",
+    "readonly",
+    "required",
+    "reversed",
+    "scoped",
+    "scrolling",
+    "seamless",
+    "selected",
+    "sortable",
+    "spellcheck",
+    "translate"
+  ],
+  "eventAttributes": {
+    "window": {
+      "tags": [
+        "body"
+      ],
+      "events": [
+        "onafterprint",
+        "onbeforeprint",
+        "onbeforeunload",
+        "onerror",
+        "onerror",
+        "onload",
+        "onmessage",
+        "onoffline",
+        "ononline",
+        "onpagehide",
+        "onpageshow",
+        "onpopstate",
+        "onresize",
+        "onstorage",
+        "onunload"
+      ]
+    },
+    "form": {
+      "tags": [
+        "form"
+      ],
+      "events": [
+        "onblur",
+        "onchange",
+        "onfocus",
+        "oninput",
+        "oninvalid",
+        "onreset",
+        "onselect",
+        "onsearch",
+        "onsubmit"
+      ]
+    },
+    "formElements": {
+      "tags": [
+        "input",
+        "select",
+        "textarea",
+        "button"
+      ],
+      "events": [
+        "onblur",
+        "onchange",
+        "onfocus",
+        "oninput",
+        "oninvalid",
+        "onselect"
+      ]
+    },
+    "mouse": {
+      "tags": [
+        "*"
+      ],
+      "events": [
+        "onclick",
+        "ondblclick",
+        "oncontextmenu",
+        "ondrag",
+        "ondragend",
+        "ondragenter",
+        "ondragleave",
+        "ondragover",
+        "ondragstart",
+        "ondrop",
+        "onmousedown",
+        "onmousemove",
+        "onmouseout",
+        "onmouseover",
+        "onmouseup",
+        "onmousewheel",
+        "onscroll",
+        "onshow",
+        "ontoggle",
+        "onwheel"
+      ]
+    },
+    "keyboard": {
+      "tags": [
+        "*"
+      ],
+      "events": [
+        "onkeydown",
+        "onkeypress",
+        "onkeyup"
+      ]
+    },
+    "clipboard": {
+      "tags": [
+        "*"
+      ],
+      "events": [
+        "oncopy",
+        "oncut",
+        "onpaste"
+      ]
+    },
+    "media": {
+      "tags": [
+        "audio",
+        "video"
+      ],
+      "events": [
+        "onabort",
+        "oncanplay",
+        "oncanplaythrough",
+        "oncuechange",
+        "ondurationchange",
+        "onemptied",
+        "onended",
+        "onerror",
+        "onloadeddata",
+        "onloadedmetadata",
+        "onloadstart",
+        "onpause",
+        "onplay",
+        "onplaying",
+        "onprogress",
+        "onratechange",
+        "onseeked",
+        "onseeking",
+        "onstalled",
+        "onsuspend",
+        "ontimeupdate",
+        "onvolumechange",
+        "onwaiting"
+      ]
+    }
+  },
+  "repetativeElements": [
+    "article",
+    "col",
+    "dt",
+    "dd",
+    "li",
+    "option",
+    "section",
+    "tr",
+    "td"
+  ]
+}

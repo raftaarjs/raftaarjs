@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@vaadin/router": "^1.2.1",
+    "cheerio": "^1.0.0-rc.3",
     "dimport": "^1.0.0",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.1"
