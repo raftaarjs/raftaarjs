@@ -8,10 +8,11 @@ let { prepareRouter } = require('../parsers/parse-router');
 let { prepareComponent } = require('../parsers/parse-component');
 let { processHTML, processCSS, processJS, buildShell } = require('./build-lit');
 let { processRouter } = require('./build-vaadin-router');
-let { writeComponent, copyAssets } = require('../utils/writers');
+let { getFileExtension } = require('../utils/string-manipulators');
+let { writeComponent, copyAssets, copyJSFiles } = require('../utils/writers');
 
 function startBuild(config) {
-  copyAssets(config.sourceDir, config.buildDir, config.buildComponentsDir);
+  copyAssets(config);
 
   compileComponents(config);
 
@@ -24,14 +25,24 @@ function compileComponents(config) {
   for(appObjectKey in appObjectList) {
     let appObject = appObjectList[appObjectKey];
     if(appObject.type === 'folder') {
-      const { className, tagName } = appObject;
-      const filePath = path.join(config.buildComponentsDir, `${tagName}.js`);
-      
-      collectResource(appObject.fileTypes)
-        .then(chunks => prepareComponent(Object.assign(chunks, {componentAttribs: { className, tagName }})))
-        .then(component => writeComponent(filePath, component));
+      const filePath = path.join(config.buildComponentsDir, `${appObject.tagName}.js`);
+      compileFolderComponents(appObject, filePath);
+    } else if(appObject.type === 'file' && (getFileExtension(appObject.fileMap) === 'js' || getFileExtension(appObject.fileMap) === 'mjs')) {
+      compileJSFileComponent(appObject.fileMap, config)
     }
   }
+}
+
+function compileFolderComponents(appObject, filePath) {
+  const { className, tagName } = appObject;
+    
+  collectResource(appObject.fileTypes)
+    .then(chunks => prepareComponent(Object.assign(chunks, {componentAttribs: { className, tagName }})))
+    .then(component => writeComponent(filePath, component));
+}
+
+function compileJSFileComponent(source) {
+  copyJSFiles(source);
 }
 
 function compileShell(config) {
@@ -75,4 +86,4 @@ function collectRouter(filePath) {
     .then(parsedRouter => processRouter(parsedRouter));
 }
 
-module.exports = { startBuild };
+module.exports = { startBuild, compileFolderComponents };

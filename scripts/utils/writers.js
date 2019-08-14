@@ -14,9 +14,10 @@ function writeComponent(filePath, component, log = true) {
   });
 }
 
-function copyAssets(source, destination, buildComponentsDir) {
-  let src = path.join(source, 'assets/');
-  let dist = path.join(destination, 'assets/');
+function copyAssets(config) {
+  const source = config.sourceDir;
+  const destination = config.buildDir
+  const componentsDir = config.buildComponentsDir;
   ncp.limit = 16;
 
   copyRootFiles('index.html', source, destination);
@@ -27,11 +28,11 @@ function copyAssets(source, destination, buildComponentsDir) {
   copyRootFiles('assets/', source, destination);
 
   try {
-    if (!fs.existsSync('./dist')) {
-      fs.mkdirSync('./dist', { recursive: true })
+    if (!fs.existsSync(destination)) {
+      fs.mkdirSync(destination, { recursive: true })
     }
-    if (!fs.existsSync(buildComponentsDir)) {
-      fs.mkdirSync(buildComponentsDir, { recursive: true })
+    if (!fs.existsSync(componentsDir)) {
+      fs.mkdirSync(componentsDir, { recursive: true })
     }
     if (!fs.existsSync('./.temp')) {
       fs.mkdirSync('./.temp', { recursive: true })
@@ -51,6 +52,16 @@ function copyRootFiles(filename, source, destination, log = true) {
   ncp(src, dist, (err) => {
     if (err) throw err;
     if (log) console.log('Copied ' + filename);
+  });
+}
+
+
+function copyJSFiles(src, prefix = 'src', log = true) {
+  let dist = src.replace(prefix, 'dist');;
+
+  ncp(src, dist, (err) => {
+    if (err) throw err;
+    if (log) console.log('Copied ' + src);
   });
 }
 
@@ -76,4 +87,4 @@ function writeTempFile(filePath, rawText, prefix = 'src') {
   });
 }
 
-module.exports = { writeComponent, copyAssets, writeTempFile };
+module.exports = { writeComponent, copyAssets, writeTempFile, copyJSFiles };

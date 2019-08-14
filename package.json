@@ -24,6 +24,9 @@
   ],
   "author": "Gaurav Panchal",
   "license": "GPL-3.0",
+  "bin": {
+    "raftaar": "./scripts/cli.js"
+  },
   "bugs": {
     "url": "https://github.com/raftaarjs/raftaarjs/issues"
   },
