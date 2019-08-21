@@ -70,13 +70,13 @@ function processJS(parsedJS) {
   return Promise.resolve({ jsChunk, importChunk } );
 }
 
-function buildShell(router) {
+function buildShell(router, importsDir = './components/') {
   return Promise.resolve(`
   import { LitElement, html, css, } from 'lit-element';
   import {Router} from '@vaadin/router';
   import dimport from 'dimport';
 
-  import './components/app-layout.js';
+  import '${importsDir}app-layout.js';
   
   class AppShell extends LitElement {
     static get styles() {

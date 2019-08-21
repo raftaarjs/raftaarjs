@@ -5,6 +5,7 @@ let config = {
   
   config.componentsDir = config.sourceDir + 'components/';
   config.buildComponentsDir = config.buildDir + 'components/';
+  config.importsDir = './components/';
   config.utilsDir = config.sourceDir + 'utils/';
   config.assetsDir = config.sourceDir + 'assets/';
   
