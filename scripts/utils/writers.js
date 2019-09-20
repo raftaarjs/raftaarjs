@@ -47,7 +47,6 @@ function copyRootFiles(filename, source, destination, log = true) {
   });
 }
 
-
 function copyJSFiles(src, prefix = 'src', log = true) {
   let dist = src.replace(prefix, 'dist');;
 

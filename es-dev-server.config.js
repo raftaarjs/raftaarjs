@@ -5,5 +5,5 @@ module.exports = {
   rootDir: 'dist/',
   appIndex: 'index.html',
   moduleDirs: ['web_modules'],
-  compatibility: 'all'
+  // compatibility: 'all'
 }

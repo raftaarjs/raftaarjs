@@ -1,4 +1,4 @@
-<app-content .title=${this.title}>
+<app-content title=${this.title}>
   <ul>
     ${this.authors.map(author => html`<li>${author.name} - <a href="${author.url}">@${author.handle}</a></li>`)}
   </ul>
