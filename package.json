@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run build:watch\" \"npm run serve\"",
-    "serve": "es-dev-server --open",
+    "serve": "es-dev-server --http2 --open",
     "build": "node ./",
     "build:watch": "watch \"npm run build\" ./src",
     "prepare": "pika install --optimize --clean --no-source-map --dest ./dist/web_modules/",
@@ -34,9 +34,10 @@
   "devDependencies": {
     "@pika/web": "^0.5.1",
     "concurrently": "^4.1.1",
-    "es-dev-server": "^1.10.4",
+    "es-dev-server": "^1.23.1",
     "ncp": "^2.0.0",
     "puppeteer": "^1.19.0",
+    "remove": "^0.1.5",
     "watch": "^1.0.2"
   },
   "dependencies": {
