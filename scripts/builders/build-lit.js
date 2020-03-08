@@ -1,3 +1,17 @@
+var cheerio = require('cheerio');
+var _ = require("lodash");
+var defaultHTML5 = require("./default-html-five.json");
+const {
+  bracesToLiterals,
+  getForEachCondition,
+  enlistAttributes,
+  addFakeTag,
+  removeFakeTag
+} = require('../utils/string-manipulators');
+
+const arrayManipulatorAttribute = 'data-foreach';
+const conditionManipulatorAttribute = 'data-if';
+
 function propertiesFunc(jsProps) {
   if (jsProps) {
     return `
@@ -24,7 +38,7 @@ function constructorFunc(jsCnstrAttribs) {
 }
 
 function printStyles(parsedCSS, cssLiterals = 'css') {
-  if(parsedCSS) {
+  if (parsedCSS) {
     return `
       static get styles() {
         return [
@@ -39,7 +53,7 @@ function printStyles(parsedCSS, cssLiterals = 'css') {
 }
 
 function printHTML(parsedHTML, htmlLiterals = 'html') {
-  if(parsedHTML) {
+  if (parsedHTML) {
     return `
       render() {
         return ${htmlLiterals}\`
@@ -51,8 +65,93 @@ function printHTML(parsedHTML, htmlLiterals = 'html') {
   return '';
 }
 
+function reformArrayElement(arrayElementItem) {
+  let { element, children } = arrayElementItem;
+  if (element === 'tr' || element === 'table' || element === 'tbody') {
+    const fakeElementPrefix = 'raftaar-fake-';
+    element = fakeElementPrefix + element;
+    let newChildren = [];
+    children.forEach((child) => {
+      newChildren.push(fakeElementPrefix + child);
+    })
+
+    children = [...newChildren];
+  }
+
+  return { element, children };
+}
+
+function buildLitArrayMap(parsedHTML) {
+  let strippedHTML = addFakeTag(parsedHTML);
+  let $ = cheerio.load(strippedHTML);
+
+  defaultHTML5.arrayElements.forEach(arrayElementItem => {
+    let { element, children } = reformArrayElement(arrayElementItem);
+
+    if ($(element + `[${arrayManipulatorAttribute}]`).attr(arrayManipulatorAttribute)) {
+      $(element + '[data-foreach]').children().each((i, item) => {
+        if (!_.includes(children, item.name)) {
+          console.error('Incorrect HTML Syntax. ' + item.name + ' inside a ' + element + ' in ' + parsedHTML);
+          process.exit(99);
+        }
+      })
+      $(element + `[${arrayManipulatorAttribute}]`).replaceWith(function () {
+        const forEacher = $(this).attr(arrayManipulatorAttribute);
+        const { itemName, itemListScope } = getForEachCondition(forEacher);
+        let iteratorHTML = $(this).html();
+        iteratorHTML = bracesToLiterals(iteratorHTML);
+        mapHTML = buildLitArrayMapString(iteratorHTML, itemListScope, itemName);
+        let attributes = enlistAttributes($(this)[0].attribs);
+        return `<${element} ${attributes}>` + mapHTML + `</${element}>`;
+      });
+    }
+  });
+
+  const sanatizedHTML = removeFakeTag($('body').html());
+
+  return sanatizedHTML;
+}
+
+function buildLitCondition(parsedHTML) {
+  let $ = cheerio.load(parsedHTML);
+  if ($(`[${conditionManipulatorAttribute}]`).attr(conditionManipulatorAttribute)) {
+    $(`[${conditionManipulatorAttribute}]`).replaceWith(function () {
+      const conditionScope = $(this).attr(conditionManipulatorAttribute);
+      let otherHTML = '';
+      let elseAttr = $(this).next().attr('data-else');
+
+      if (typeof elseAttr !== typeof undefined && elseAttr !== false) {
+        console.log('$(this).nextSibling', $(this).next().html());
+        let otherattributes = enlistAttributes($(this).next()[0].attribs);
+        otherHTML = `<${$(this).next()[0].name} ${otherattributes}>` + $(this).next().html() + `</${$(this).next()[0].name}>`;
+        $(this).next().remove();
+      }
+
+      let attributes = enlistAttributes($(this)[0].attribs);
+      let successHTML = `<${$(this)[0].name} ${attributes}>` + $(this).html() + `</${$(this)[0].name}>`;
+      let mapHTML = buildLitConditionString(successHTML, otherHTML, conditionScope);
+      return mapHTML
+    });
+  }
+
+  const sanatizedHTML = $('body').html().replace(/=&gt;/g, '=>');
+
+  return sanatizedHTML;
+}
+
+function buildLitArrayMapString(iteratorHTML, itemListScope, itemName) {
+  return "${" + `${itemListScope}.map((${itemName}, index) => html\`${iteratorHTML}\`)` + "}";
+}
+
+function buildLitConditionString(successHTML = '', otherHTML = '', conditionScope) {
+  return "${" + `${conditionScope} ? html\`${successHTML}\` : html\`${otherHTML}\`` + "}";
+}
+
 function processHTML(parsedHTML) {
-  let htmlChunk = printHTML(parsedHTML);
+  conditionSortedHTML = buildLitCondition(parsedHTML)
+  const arraySortedHTML = buildLitArrayMap(conditionSortedHTML);
+  const htmlSupportedLiteral = bracesToLiterals(arraySortedHTML);
+  let htmlChunk = printHTML(htmlSupportedLiteral);
   return Promise.resolve(htmlChunk);
 }
 
@@ -67,7 +166,7 @@ function processJS(parsedJS) {
   jsChunk = propertiesFunc(jsProps);
   jsChunk += constructorFunc(jsCnstrAttribs);
   jsChunk += jsFuncs
-  return Promise.resolve({ jsChunk, importChunk } );
+  return Promise.resolve({ jsChunk, importChunk });
 }
 
 function buildShell(router, importsDir = './components/') {

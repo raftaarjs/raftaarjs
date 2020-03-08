@@ -16,6 +16,10 @@
     "component": "app-contact"
   },
   {
+    "path": "/tests",
+    "component": "app-tests"
+  },
+  {
     "path": "(.*)",
     "component": "not-found"
   }

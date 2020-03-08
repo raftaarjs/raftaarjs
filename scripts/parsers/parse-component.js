@@ -3,9 +3,9 @@ const vm = require('vm');
 /**
  * TODO: AST Transfer will happen here using babel. Current Logic is for demo purposes
  */
-function prepareComponent({ componentAttribs, FrontendFramework, importChunk, htmlChunk, cssChunk, jsChunk }) {
-  if (!FrontendFramework) {
-    FrontendFramework = {
+function prepareComponent({ componentAttribs, esmFramework, importChunk, htmlChunk, cssChunk, jsChunk }) {
+  if (!esmFramework) {
+    esmFramework = {
       imports: ['LitElement', 'html', 'css'],
       tagName: 'lit-element',
       className: 'LitElement',
@@ -65,11 +65,11 @@ function prepareComponent({ componentAttribs, FrontendFramework, importChunk, ht
    * TODO: This will formed using AST when we go ahead
    */
   let completeStructure = `
-      import { ${iterateFWImports(FrontendFramework.imports)} } from '${FrontendFramework.tagName}';
+      import { ${iterateFWImports(esmFramework.imports)} } from '${esmFramework.tagName}';
   
       ${iterateImports(importChunk)}
 
-      class ${componentAttribs.className} extends ${FrontendFramework.className} {
+      class ${componentAttribs.className} extends ${esmFramework.className} {
         ${cssChunk}
         ${htmlChunk}
         ${checkJS(jsChunk)}

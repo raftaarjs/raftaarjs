@@ -67,7 +67,7 @@ function sortFunctions(funcs) {
   for (let func in funcs) {
     let curFunc = funcs[func];
 
-    curFunc = shadoDomize(curFunc);
+    curFunc = shadowDomize(curFunc);
 
     if (curFunc.startsWith('function(') || curFunc.startsWith('function (')) {
       curFunc = removeFirstFunctionString(curFunc);
@@ -110,8 +110,8 @@ function getImportLines(str) {
   return importChunk;
 }
 
-function shadoDomize(curFunc) {
-  return curFunc.replace(/document./g, "this.shadowRoot.");
+function shadowDomize(curFunc) {
+  return curFunc.replace(/ document./g, " this.shadowRoot.");
 }
 
 module.exports = { prepareJS };

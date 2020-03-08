@@ -1,1 +1,1 @@
-import './app-header.js'
+import './app-header'

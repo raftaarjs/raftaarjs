@@ -1,0 +1,122 @@
+<app-content title="{{this.title}}">
+  <h2>li Element</h2>
+
+  <ul data-foreach="{{listItem in this.list}}" class="my-table">
+    <li>{{listItem.name}} - <a href="{{listItem.url}}">@{{listItem.handle}}</a></li>
+  </ul>
+  <ol data-foreach="{{listItem in this.list}}" class="my-table">
+    <li>{{listItem.name}} - <a href="{{listItem.url}}">@{{listItem.handle}}</a></li>
+  </ol>
+
+  <h2>option Element</h2>
+  <div>
+    <label for="listSelect">Select an Item</label>
+    <select id="listSelect" data-foreach="{{listItem in this.list}}">
+      <option name="{{listItem.name}}" value="{{listItem.url}}">@{{listItem.handle}}</option>
+    </select>
+  </div>
+  <br>
+  <br>
+<div>
+  <label for="listDataList">Select an Item</label>
+  <input id="listDataList" list="gitUsers">
+  <datalist data-foreach="{{listItem in this.list}}" id="gitUsers">
+    <option name="{{listItem.name}}" value="@{{listItem.handle}}"></option>
+  </datalist>
+</div>
+  <br>
+
+  <h2>dt-dd Element</h2>
+
+  <dl data-foreach="{{listItem in this.list}}">
+    <dt>{{listItem.name}}</dt>
+    <dd>@{{listItem.handle}} - {{listItem.url}}</dd>
+  </dl>
+
+  <h2>table Element</h2>
+  <table>
+    <caption>Table 1. Made with single level Array</caption>
+    <thead>
+      <tr data-foreach="{{head in this.tableHead}}">
+        <th>{{head}}</th>
+      </tr>
+    </thead>
+    <tbody data-foreach="{{tr in this.table}}">
+      <tr>
+        <td>{{index + 1}}</td>
+        <td>{{tr.name}}</td>
+        <td>@{{tr.handle}}</td>
+        <td>{{tr.url}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <table>
+    <caption>Table 2. Made with Two level Array</caption>
+    <thead>
+      <tr data-foreach="{{head in this.tableHead}}">
+        <th>{{head}}</th>
+      </tr>
+    </thead>
+    <tbody data-foreach="{{tr in this.tableArray}}">
+      <tr data-foreach="{{td in tr}}">
+        <td>{{td}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <caption>Table 3. Made with single level Array without head</caption>
+  <table data-foreach="{{tr in this.table}}">
+    <tr>
+      <td>{{index + 1}}</td>
+      <td>{{tr.name}}</td>
+      <td>@{{tr.handle}}</td>
+      <td>{{tr.url}}</td>
+    </tr>
+  </table>
+
+  <h2>section Element</h2>
+  <main data-foreach="{{listItem in this.list}}">
+    <section>
+      <h3>{{listItem.name}}</h3><a href="{{listItem.url}}">@{{listItem.handle}}</a>
+    </section>
+  </main>
+
+  <h2>article Element</h2>
+  <main data-foreach="{{listItem in this.list}}">
+    <article>
+      <h3>{{listItem.name}}</h3><a href="{{listItem.url}}">@{{listItem.handle}}</a>
+    </article>
+  </main>
+
+  <h2>data-if Attribute</h2>
+  <div data-if="this.showBox" class="articles">
+    <main data-foreach="{{listItem in this.list}}">
+      <article>
+        <h3>{{listItem.name}}</h3><a href="{{listItem.url}}">@{{listItem.handle}}</a>
+      </article>
+    </main>
+  </div>
+  <div data-else class="not-articles">The box is Hidden</div>
+  <button @click="{{() => this._showMyBox()}}">Toggle Box</button>
+  
+  <br>
+  <div data-if="this.showPara" class="articles">
+    <p>Some Paragraph of Blue Pill</p>
+  </div>
+  <div data-else class="not-articles">
+    <p>Some Paragraph of Red Pill</p>
+  </div>
+  <button @click="{{() => this._showMyPara()}}">Toggle Pill</button>
+  <br>
+  
+  <div data-if="this.showWall" class="articles">
+    <p>Ahead is Wall. Hit and Perish</p>
+  </div>
+  <button @click="{{() => this._showMyWall()}}">{{this.wallButtonText}}</button>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+</app-content>

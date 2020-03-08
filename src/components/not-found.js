@@ -1,7 +1,7 @@
 
 import { LitElement, html, css, } from 'lit-element';
 
-import './app-content.js';
+import './app-content';
 
 class NotFound extends LitElement {
 

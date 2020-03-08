@@ -172,15 +172,54 @@
       ]
     }
   },
-  "repeatativeElements": [
-    "article",
-    "col",
-    "dt",
-    "dd",
-    "li",
-    "option",
-    "section",
-    "tr",
-    "td"
+  "arrayElements": [
+    {
+      "element": "main",
+      "children": ["article", "section"]
+    },
+    {
+      "element": "optgroup",
+      "children": ["option"]
+    },
+    {
+      "element": "select",
+      "children": ["option", "optgroup"]
+    },
+    {
+      "element": "datalist",
+      "children": ["option"]
+    },
+    {
+      "element": "dl",
+      "children": ["dt", "dd"]
+    },
+    {
+      "element": "ul",
+      "children": ["li"]
+    },
+    {
+      "element": "ol",
+      "children": ["li"]
+    },
+    {
+      "element": "tr",
+      "children": ["td", "th"]
+    },
+    {
+      "element": "tbody",
+      "children": ["tr"]
+    },
+    {
+      "element": "thead",
+      "children": ["tr"]
+    },
+    {
+      "element": "tfoot",
+      "children": ["tr"]
+    },
+    {
+      "element": "table",
+      "children": ["tr", "tbody", "thead", "caption", "tfoot"]
+    }
   ]
 }

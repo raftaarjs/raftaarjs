@@ -1,4 +1,4 @@
-import './app-content.js'
+import './app-content'
 
 this.emails = ['steve'];
 

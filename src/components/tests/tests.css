@@ -1,0 +1,16 @@
+dt {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 0.5rem;
+}
+
+dd {
+    margin: 0;
+    line-height: 1.5;
+    padding: 0 0 1.5em 0;
+}
+
+h2 {
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #ccc;
+}

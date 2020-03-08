@@ -1,9 +1,9 @@
 <nav>
     <div class="container">
-        <brand>${this.brand}</brand>
-        <ul>
-            ${this.navlinks.map((navlink, index) => html`<li><a href="${navlink.url}" @click="${() => this._setActive(index)}" class="${this._getActive(navlink)}">${navlink.name}</a></li>`)}
-        </ul>
+        <brand>{{this.brand}}</brand>
+        <ul data-foreach="{{navlink in this.navlinks}}"><!--
+            --><li><a href="{{navlink.url}}" @click="{{() => this._setActive(index)}}" class="{{this._getActive(navlink)}}">{{navlink.name}}</a></li><!--
+        --></ul>
     </div>
 </nav>
 
