@@ -1,4 +1,12 @@
 <app-content title="{{this.title}}">
+  <h2>column-row-grid Implementation</h2>
+  <grid class="container">
+    <row class="row" data-foreach="{{image in this.images}}">
+      <column class="col-4">
+        <img src="{{image}}" alt="">
+      </column>
+    </row>
+  </grid>
   <h2>li Element</h2>
 
   <ul data-foreach="{{listItem in this.list}}" class="my-table">

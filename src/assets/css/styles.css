@@ -1,5 +1,8 @@
 :root {
   --base-input-padding: 10px 15px;
+  --grid-maxWidth: 120rem;
+  --grid-gutter: 1rem;
+  --font-size: 1.6rem;
 }
 
 *{

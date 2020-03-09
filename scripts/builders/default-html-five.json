@@ -220,6 +220,14 @@
     {
       "element": "table",
       "children": ["tr", "tbody", "thead", "caption", "tfoot"]
+    },
+    {
+      "element": "row",
+      "children": ["column"]
+    },
+    {
+      "element": "grid",
+      "children": ["row"]
     }
   ]
 }

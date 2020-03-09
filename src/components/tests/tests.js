@@ -42,3 +42,12 @@
     ['3', 'Justin Fagnani', 'justinfagnani', 'http://github.com/justinfagnani' ],
     ['4', 'fatty', 'fat', 'http://github.com/fat' ],
   ];
+
+  this.images = [
+    'https://via.placeholder.com/300x300.png',
+    'https://via.placeholder.com/300x300.png',
+    'https://via.placeholder.com/300x300.png',
+    'https://via.placeholder.com/300x300.png',
+    'https://via.placeholder.com/300x300.png',
+    'https://via.placeholder.com/300x300.png',
+  ]
