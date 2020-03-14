@@ -5,7 +5,7 @@
     <label for="emailInput">Email</label><br/>
     <input id="emailInput" name="email">
     <button @click="{{() => this._addEmail()}}">Submit</button>
-    <ul data-foreach="{{email in this.emails}}" style="margin-top: 50px;">
+    <ul data-foreach="{{email in this.emails}}" class="mt-5">
         <li>{{email}}</li>
     </ul>
 </app-content>

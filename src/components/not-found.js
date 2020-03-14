@@ -1,10 +1,9 @@
 
-import { LitElement, html, css, } from 'lit-element';
+import { LitElement, html, css } from 'lit-element';
 
 import './app-content';
 
 class NotFound extends LitElement {
-
   static get styles() {
     return css`
       h1 {
@@ -29,10 +28,6 @@ class NotFound extends LitElement {
   static get properties() {
     return {
     };
-  }
-
-  constructor() {
-    super();
   }
 }
 
