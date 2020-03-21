@@ -1,17 +1,19 @@
 #!/usr/bin/env node
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 const commandLineArgs = require('command-line-args');
 const commandLineUsage = require('command-line-usage');
-let path = require("path");
+const path = require('path');
 const config = require('./config');
-let { getAppObjectList } = require('./structures/app-structure');
-let { startBuild, compileFolderComponents } = require('./builders/build');
+const { getAppObjectList } = require('./structures/app-structure');
+const { startBuild, compileFolderComponents } = require('./builders/build');
 
 const mainDefinitions = [
-  { name: 'action', defaultOption: true }
-]
+  { name: 'action', defaultOption: true },
+];
 
-const mainCommand = commandLineArgs(mainDefinitions, { stopAtFirstUnknown: true })
-let argv = mainCommand._unknown || []
+const mainCommand = commandLineArgs(mainDefinitions, { stopAtFirstUnknown: true });
+let argv = mainCommand._unknown || [];
 
 if (mainCommand.action === 'help') {
   /* eslint-disable-next-line no-console */
@@ -31,8 +33,8 @@ if (mainCommand.action === 'help') {
           { name: 'eject', summary: 'ejects a component or shell' },
           { name: 'build', summary: '' },
           { name: 'version', summary: 'Print the version.' },
-          { name: 'etc', summary: 'Etc.' }
-        ]
+          { name: 'etc', summary: 'Etc.' },
+        ],
       },
     ]),
   );
@@ -50,25 +52,27 @@ if (mainCommand.action === 'eject') {
     { name: 'help', alias: 'h', type: Boolean },
   ];
 
-  const actionOptions = commandLineArgs(actionDefinitions, { argv, stopAtFirstUnknown: true })
-  argv = actionOptions._unknown || []
+  const actionOptions = commandLineArgs(actionDefinitions, { argv, stopAtFirstUnknown: true });
+  argv = actionOptions._unknown || [];
 
   if (actionOptions.component) {
-    let appObjectList = getAppObjectList(config);
+    const appObjectList = getAppObjectList(config);
 
-    for (appObjectKey in appObjectList) {
-      let appObject = appObjectList[appObjectKey];
+    for (const appObjectKey in appObjectList) {
+      const appObject = appObjectList[appObjectKey];
       if (appObject.type === 'folder' && appObject.tagName === actionOptions.component.trim()) {
         const filePath = path.join(config.componentsDir, `${appObject.tagName}.js`);
+
         compileFolderComponents(appObject, filePath);
-        console.log('Ejecting Component ' + actionOptions.component);
-        process.exit();
+        // eslint-disable-next-line no-console
+        console.log(`Ejecting Component ${actionOptions.component}`);
+        // process.exit();
       }
     }
-    console.log('Component ' + actionOptions.component + ' not found');
   }
 
   if (actionOptions.shell) {
+    // eslint-disable-next-line no-console
     console.log('Ejecting shell');
   }
 

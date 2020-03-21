@@ -1,13 +1,7 @@
-function processRouter(routerObj, importsDir = './components/') {
-  return Promise.resolve(`[
-    ${iterateRouter(routerObj, importsDir)}
-  ]`);
-}
-
 function iterateRouter(routerObj, importsDir) {
-  let routes = ``;
+  let routes = '';
 
-  routerObj.forEach(route => {
+  routerObj.forEach((route) => {
     if (route.redirect) {
       routes += `{ path: '${route.path}', redirect: '${route.redirect}'},`;
     } else {
@@ -16,6 +10,12 @@ function iterateRouter(routerObj, importsDir) {
   });
 
   return routes;
+}
+
+function processRouter(routerObj, importsDir = './components/') {
+  return Promise.resolve(`[
+    ${iterateRouter(routerObj, importsDir)}
+  ]`);
 }
 
 module.exports = { processRouter };

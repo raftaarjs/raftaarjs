@@ -1,7 +1,7 @@
-let { readFile } = require('../utils/readers');
+const { readFile } = require('../utils/readers');
 
 function prepareRouter(filePath) {
-  let routerRaw = readFile(filePath);
+  const routerRaw = readFile(filePath);
   return Promise.resolve(JSON.parse(routerRaw));
 }
 

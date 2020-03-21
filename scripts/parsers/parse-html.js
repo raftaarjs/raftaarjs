@@ -1,7 +1,7 @@
-let { readFile } = require('../utils/readers');
+const { readFile } = require('../utils/readers');
 
 function prepareHTML(filePath) {
-  let htmlRaw = readFile(filePath);
+  const htmlRaw = readFile(filePath);
   return Promise.resolve(htmlRaw);
 }
 

@@ -1,22 +1,40 @@
 const fs = require('fs');
 const path = require('path');
-var ncp = require('ncp').ncp;
+const { ncp } = require('ncp');
 
-const { readFile } = require('./readers');
+function createDir(dir) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
 
-function writeComponent(filePath, component, log = true) {
-  fs.writeFile(filePath, component, function (err) {
+function copyRootFiles(filename, source, destination, log = true) {
+  const src = path.join(source, filename);
+  const dist = path.join(destination, filename);
+
+  ncp(src, dist, (err) => {
     if (err) {
       console.log(err);
-    } else {
-      if (log) console.log(`Component ${filePath} written`);
+      throw err;
+    } else if (log) {
+      console.log(`Copied ${filename}`);
+    }
+  });
+}
+
+function writeComponent(filePath, component, log = true) {
+  fs.writeFile(filePath, component, (err) => {
+    if (err) {
+      console.log(err);
+    } else if (log) {
+      console.log(`Component ${filePath} written`);
     }
   });
 }
 
 function copyAssets(config) {
   const source = config.sourceDir;
-  const destination = config.buildDir
+  const destination = config.buildDir;
   const componentsDir = config.buildComponentsDir;
   ncp.limit = 16;
 
@@ -33,55 +51,49 @@ function copyAssets(config) {
     createDir('./.temp');
     createDir('./.temp/components');
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
 }
 
-function copyRootFiles(filename, source, destination, log = true) {
-  let src = path.join(source, filename);
-  let dist = path.join(destination, filename);
-
-  ncp(src, dist, (err) => {
-    if (err) throw err;
-    if (log) console.log('Copied ' + filename);
-  });
-}
-
 function copyJSFiles(src, prefix = 'src', log = true) {
-  let dist = src.replace(prefix, 'dist');;
+  const dist = src.replace(prefix, 'dist');
 
   ncp(src, dist, (err) => {
-    if (err) throw err;
-    if (log) console.log('Copied ' + src);
+    if (err) { throw err; }
+    if (log) { console.log(`Copied ${src}`); }
   });
 }
 
 function writeTempFile(filePath, rawText, prefix = 'src') {
-  let tempFilePath = filePath.replace(prefix, '.temp');
-  let tempFileDir = path.dirname(tempFilePath);
-  return new Promise(resolve => {
+  const tempFilePath = filePath.replace(prefix, '.temp');
+  const tempFileDir = path.dirname(tempFilePath);
+  return new Promise((resolve) => {
     if (!fs.existsSync(tempFileDir)) {
       fs.mkdirSync(tempFileDir, { recursive: true }, (err) => {
-        if (err) throw err;
-        fs.writeFile(tempFilePath, rawText, function (err) {
-          if (err) console.log(err);
+        if (err) {
+          console.log(err);
+          throw err;
+        }
+        fs.writeFile(tempFilePath, rawText, (error) => {
+          if (error) {
+            console.log(error);
+            throw err;
+          }
           return resolve(tempFilePath);
         });
       });
     }
 
-    fs.writeFile(tempFilePath, rawText, function (err) {
-      if (err) console.log(err);
+    fs.writeFile(tempFilePath, rawText, (err) => {
+      if (err) {
+        console.log(err);
+        throw err;
+      }
       return resolve(tempFilePath);
     });
-
   });
 }
 
-function createDir(dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true })
-  }
-}
-
-module.exports = { writeComponent, createDir, copyAssets, writeTempFile, copyJSFiles };
+module.exports = {
+  writeComponent, createDir, copyAssets, writeTempFile, copyJSFiles,
+};

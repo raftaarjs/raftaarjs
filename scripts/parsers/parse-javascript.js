@@ -1,57 +1,59 @@
-let { readFile } = require('../utils/readers');
-let { writeTempFile } = require('../utils/writers');
-let { browserPageLoad } = require('./browser-load');
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
+const { readFile } = require('../utils/readers');
+const { writeTempFile } = require('../utils/writers');
+const { browserPageLoad } = require('./browser-load');
 
+function removeFirstFunctionString(str) {
+  return str.replace(/function/, ''); // Remove the first one
+}
 
-function prepareJS(filePath) {
-  let jsRaw = readFile(filePath);
-  return new Promise(async (resolve, reject) => {
+function removeFirstArrowString(str) {
+  return str.replace('=>', '');
+}
 
-    let importChunk = getImportLines(jsRaw);
-    let nonImportJS = jsRaw.trim().replace(/import .*$/mg, '');
-    let sanitizeFilePath = filePath.replace(/.js/, '-sanitized.js');
-    let tempFilePath = await writeTempFile(sanitizeFilePath, nonImportJS);
-
-    browserPageLoad({ jsRaw: nonImportJS, filePath: tempFilePath })
-      .then((jsObj) => {
-        let { jsProps, jsCnstrAttribs } = createConstructor(jsObj.constructor);
-
-        let jsFuncs = sortFunctions(jsObj.functions);
-
-        parsedJS = { importChunk, jsProps, jsCnstrAttribs, jsFuncs };
-
-        return resolve(parsedJS);
-      });
+function getImportLines(str) {
+  const lines = str.split('\n');
+  const importChunk = [];
+  lines.forEach((line) => {
+    if (line.indexOf('import ') >= 0) {
+      importChunk.push(`${line}`);
+    }
   });
+  return importChunk;
+}
+
+function shadowDomize(curFunc) {
+  return curFunc.replace(/ document./g, ' this.shadowRoot.');
 }
 
 function createConstructor(cnstr) {
-  let jsCnstrAttribs = ``;
-  let jsProps = ``;
-  for (let attr in cnstr) {
+  let jsCnstrAttribs = '';
+  let jsProps = '';
+  for (const attr in cnstr) {
     if (typeof cnstr[attr] === 'object') {
       jsProps += ` ${attr}: Object,
-      `
+      `;
       jsCnstrAttribs += ` this.${attr} = ${JSON.stringify(cnstr[attr])};
-    `;
+      `;
     } else if (Array.isArray(cnstr[attr])) {
       jsProps += ` ${attr}: Array,
-      `
+      `;
       jsCnstrAttribs += ` this.${attr} = ${JSON.stringify(cnstr[attr])};
-    `;
+      `;
     } else if (typeof cnstr[attr] === 'number') {
       jsProps += ` ${attr}: Number,
-      `
+      `;
       jsCnstrAttribs += ` this.${attr} = ${cnstr[attr]};
-    `;
+      `;
     } else if (typeof cnstr[attr] === 'boolean') {
       jsProps += ` ${attr}: Boolean,
-      `
+      `;
       jsCnstrAttribs += ` this.${attr} = ${cnstr[attr]};
     `;
     } else {
       jsProps += ` ${attr}: String,
-      `
+      `;
       jsCnstrAttribs += ` this.${attr} = '${cnstr[attr]}';
     `;
     }
@@ -64,7 +66,7 @@ function sortFunctions(funcs) {
   let functionList = `
   `;
 
-  for (let func in funcs) {
+  for (const func in funcs) {
     let curFunc = funcs[func];
 
     curFunc = shadowDomize(curFunc);
@@ -83,35 +85,34 @@ function sortFunctions(funcs) {
       `;
     }
 
+    // eslint-disable-next-line no-param-reassign
     funcs[func] = curFunc;
   }
   return functionList;
 }
 
+function prepareJS(filePath) {
+  const jsRaw = readFile(filePath);
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async (resolve) => {
+    const importChunk = getImportLines(jsRaw);
+    const nonImportJS = jsRaw.trim().replace(/import .*$/mg, '');
+    const sanitizeFilePath = filePath.replace(/.js/, '-sanitized.js');
+    const tempFilePath = await writeTempFile(sanitizeFilePath, nonImportJS);
 
-function removeFirstFunctionString(str) {
-  str = str.replace(/function/, ''); // Remove the first one
-  return str;
-}
+    browserPageLoad({ jsRaw: nonImportJS, filePath: tempFilePath })
+      .then((jsObj) => {
+        const { jsProps, jsCnstrAttribs } = createConstructor(jsObj.constructor);
 
-function removeFirstArrowString(str) {
-  str = str.replace('=>', ''); 
-  return str;
-}
+        const jsFuncs = sortFunctions(jsObj.functions);
 
-function getImportLines(str) {
-  var lines = str.split('\n');
-  let importChunk = [];
-  lines.forEach(line => {
-    if (line.indexOf('import ') >= 0) {
-      importChunk.push(`${line}`);
-    } 
+        const parsedJS = {
+          importChunk, jsProps, jsCnstrAttribs, jsFuncs,
+        };
+
+        return resolve(parsedJS);
+      });
   });
-  return importChunk;
-}
-
-function shadowDomize(curFunc) {
-  return curFunc.replace(/ document./g, " this.shadowRoot.");
 }
 
 module.exports = { prepareJS };

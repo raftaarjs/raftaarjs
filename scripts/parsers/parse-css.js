@@ -1,7 +1,7 @@
-let { readFile } = require('../utils/readers');
+const { readFile } = require('../utils/readers');
 
 function prepareCSS(filePath) {
-  let cssRaw = readFile(filePath);
+  const cssRaw = readFile(filePath);
   return Promise.resolve(cssRaw);
 }
 

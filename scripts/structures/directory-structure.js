@@ -3,7 +3,7 @@ var path = require('path');
 
 function readDirs(pathName, depth) {
   function readRecursive(pathsObject, pathName, depthCount) {
-    if (depthCount == 0)
+    if (depthCount === 0)
       return pathsObject;
     var files = fs.readdirSync(pathName);
     for (var fileIndex in files) {
