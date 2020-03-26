@@ -1,6 +1,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 const path = require('path');
+const del = require('del');
 
 const { getAppObjectList } = require('../structures/app-structure');
 const { prepareHTML } = require('../parsers/parse-html');
@@ -55,7 +56,7 @@ function collectResource(fileTypes) {
   });
 }
 
-function compileFolderComponents(appObject, filePath) {
+function compileFolderComponents(appObject, filePath, isComponentExtract) {
   const { className, tagName } = appObject;
 
   collectResource(appObject.fileTypes)
@@ -63,7 +64,14 @@ function compileFolderComponents(appObject, filePath) {
       {
         componentAttribs: { className, tagName },
       })))
-    .then((component) => writeComponent(filePath, component));
+    .then((component) => writeComponent(filePath, component, isComponentExtract))
+    .then(() => {
+      if (isComponentExtract) {
+        console.log(JSON.stringify(appObject, null, 2));
+        const dirPath = path.dirname(appObject.fileTypes.html[0]);
+        del.sync([dirPath]);
+      }
+    });
 }
 
 function compileHTMLFileComponent(appObject, filePath, componentsDir) {

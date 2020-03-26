@@ -15,5 +15,15 @@
     "class-methods-use-this":"off",
     "arrow-body-style":"off",
     "no-console":"off"
-  }
+  },
+  "overrides": [{
+    "files": [ "src/components/*.js" ],
+    "rules": {
+      "lines-between-class-members": "off",
+      "no-sequences": "off",
+      "comma-dangle":"off",
+      "array-bracket-spacing":"off",
+      "no-unused-expressions":"off"
+    }
+  }]
 }

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const uglifyes = require('uglify-es');
 const { ncp } = require('ncp');
 
 function createDir(dir) {
@@ -22,14 +23,36 @@ function copyRootFiles(filename, source, destination, log = true) {
   });
 }
 
-function writeComponent(filePath, component, log = true) {
-  fs.writeFile(filePath, component, (err) => {
-    if (err) {
-      console.log(err);
-    } else if (log) {
-      console.log(`Component ${filePath} written`);
-    }
-  });
+function uglifyOptions(isComponentExtract) {
+  if (!isComponentExtract) { return { compress: true }; }
+
+  return {
+    ecma: '8',
+    output: {
+      beautify: true,
+      quote_style: 1,
+      indent_level: 2,
+      preserve_line: true,
+    },
+  };
+}
+
+function writeComponent(filePath, component, isComponentExtract = false, log = true) {
+  const options = uglifyOptions(isComponentExtract);
+  const beautifiedComponent = uglifyes.minify(component, options);
+  if (beautifiedComponent.code) {
+    fs.writeFile(filePath, `${beautifiedComponent.code}
+`, (err) => {
+      if (err) {
+        console.log(err);
+        throw err;
+      } else if (log) {
+        console.log(`Component ${filePath} written`);
+      }
+    });
+  } else {
+    console.log(beautifiedComponent.error);
+  }
 }
 
 function copyAssets(config) {

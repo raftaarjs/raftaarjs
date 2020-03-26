@@ -16,7 +16,6 @@ const mainCommand = commandLineArgs(mainDefinitions, { stopAtFirstUnknown: true 
 let argv = mainCommand._unknown || [];
 
 if (mainCommand.action === 'help') {
-  /* eslint-disable-next-line no-console */
   console.log(
     commandLineUsage([
       {
@@ -62,22 +61,17 @@ if (mainCommand.action === 'eject') {
       const appObject = appObjectList[appObjectKey];
       if (appObject.type === 'folder' && appObject.tagName === actionOptions.component.trim()) {
         const filePath = path.join(config.componentsDir, `${appObject.tagName}.js`);
-
-        compileFolderComponents(appObject, filePath);
-        // eslint-disable-next-line no-console
+        compileFolderComponents(appObject, filePath, true);
         console.log(`Ejecting Component ${actionOptions.component}`);
-        // process.exit();
       }
     }
   }
 
   if (actionOptions.shell) {
-    // eslint-disable-next-line no-console
     console.log('Ejecting shell');
   }
 
   if (actionOptions.help) {
-    /* eslint-disable-next-line no-console */
     console.log(
       commandLineUsage([
         {
