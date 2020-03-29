@@ -43,15 +43,38 @@ function collectResource(fileTypes) {
     let cssChunk = '';
     let jsChunk = '';
     let importChunk = '';
+    let removeImports = [];
 
-    const htmlPromise = fileTypes.html[0] ? collectHTML(fileTypes.html[0]).then((chunk) => { htmlChunk = chunk; }) : '';
+    const htmlPromise = fileTypes.html[0] ? collectHTML(fileTypes.html[0]).then((chunk) => { htmlChunk = chunk.htmlChunk; removeImports = chunk.removeImports; }) : '';
     const cssPromise = fileTypes.css[0] ? collectCSS(fileTypes.css[0]).then((chunk) => { cssChunk = chunk; }) : '';
     const jsPromise = fileTypes.js[0] ? collectJS(fileTypes.js[0]).then((chunk) => { jsChunk = chunk.jsChunk; importChunk = chunk.importChunk; }) : '';
 
     Promise.all([htmlPromise, cssPromise, jsPromise])
-      .then(() => resolve({
-        htmlChunk, cssChunk, jsChunk, importChunk,
-      }))
+      .then(() => {
+        let includeLazyImport = false;
+        console.log('removeImports', removeImports, importChunk);
+
+        const filteredImportChunk = importChunk.filter((item) => {
+          let selected = true;
+          for (let i = 0; i < removeImports.length; i++) {
+            if (item.indexOf(`./${removeImports[i]}`) > -1) {
+              selected = false;
+              includeLazyImport = true;
+              break;
+            }
+          }
+          return selected;
+        });
+
+        if (includeLazyImport) {
+          filteredImportChunk.push('import \'./lazy-element.js\'');
+        }
+        console.log('filteredImportChunk', filteredImportChunk, includeLazyImport);
+
+        return resolve({
+          htmlChunk, cssChunk, jsChunk, importChunk: filteredImportChunk,
+        });
+      })
       .catch((e) => reject(e));
   });
 }

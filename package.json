@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "npx concurrently \"npm run build:watch\" \"npm run serve\"",
-    "serve": "es-dev-server --http2 --open",
+    "serve": "npx es-dev-server --http2 --open",
     "build": "node ./",
-    "build:watch": "watch \"npm run build\" ./src",
-    "prepare": "pika install --optimize --clean --no-source-map --dest ./dist/web_modules/",
+    "build:watch": "npx watch \"npm run build\" ./src",
+    "prepare": "npx pika install --optimize --clean --no-source-map --dest ./dist/web_modules/",
     "clean": "rm -rf node_modules/ dist/ .temp/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -44,7 +44,7 @@
     "eslint-plugin-import": "^2.20.1",
     "lodash": "^4.17.15",
     "ncp": "^2.0.0",
-    "puppeteer": "^1.19.0",
+    "puppeteer": "1.19.0",
     "remove": "^0.1.5",
     "uglify-es": "^3.3.9",
     "watch": "^1.0.2"

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 const cheerio = require('cheerio');
 const _ = require('lodash');
 const defaultHTML5 = require('./default-html-five.json');
@@ -6,12 +7,16 @@ const {
   bracesToLiterals,
   getForEachCondition,
   enlistAttributes,
+  enlistRawAttributes,
   addFakeTag,
   removeFakeTag,
 } = require('../utils/string-manipulators');
 
 const arrayManipulatorAttribute = 'data-foreach';
 const conditionManipulatorAttribute = 'data-if';
+const elseConditionManipulatorAttribute = 'data-else';
+let nonDataIfWC = {};
+let dataIfWC = {};
 
 function buildLitArrayMapString(iteratorHTML, itemListScope, itemName) {
   return `${'${'}${itemListScope}.map((${itemName}, index) => html\`${iteratorHTML}\`)${'}'}`;
@@ -100,7 +105,6 @@ function buildLitArrayMap(parsedHTML) {
     if ($(`${element}[${arrayManipulatorAttribute}]`).attr(arrayManipulatorAttribute)) {
       $(`${element}[data-foreach]`).children().each((i, item) => {
         if (!_.includes(children, item.name)) {
-          // eslint-disable-next-line no-console
           console.error(`Incorrect HTML Syntax. ${item.name} inside a ${element} in ${parsedHTML}`);
           process.exit(99);
         }
@@ -123,19 +127,90 @@ function buildLitArrayMap(parsedHTML) {
   return sanatizedHTML;
 }
 
+function buildLitBooleanAttribs(parsedHTML) {
+  const $ = cheerio.load(parsedHTML);
+  nonDataIfWC = {};
+  dataIfWC = {};
+
+  $('*').each((i, item) => {
+    const tagName = $(item)[0].name;
+    if (tagName.indexOf('-') > -1) {
+      if (nonDataIfWC[tagName]) {
+        // eslint-disable-next-line operator-assignment
+        nonDataIfWC[tagName] = nonDataIfWC[tagName] + 1;
+      } else {
+        nonDataIfWC[tagName] = 1;
+      }
+    }
+    let attributes = '';
+    const entries = Object.entries($(item)[0].attribs);
+    let canUpdateItem = false;
+
+    // eslint-disable-next-line prefer-const
+    for (let [attr, val] of entries) {
+      const isAttrBoolean = _.includes(defaultHTML5.booleanAttributes, attr);
+      const attrHasValue = val.indexOf('}}') > -1;
+
+      if (isAttrBoolean && attrHasValue) {
+        canUpdateItem = true;
+        attr = `?${attr}`;
+      }
+      attributes += `${attr}="${val}" `;
+    }
+
+    if (canUpdateItem) {
+      $(item).replaceWith(function replace() {
+        return `<${$(this)[0].name} ${attributes}>${$(this).html()}</${$(this)[0].name}>`;
+      });
+    }
+  });
+
+  const sanatizedHTML = $('body').html().replace(/=&gt;/g, '=>');
+
+  return sanatizedHTML;
+}
+
 function buildLitCondition(parsedHTML) {
   const $ = cheerio.load(parsedHTML);
+  const removeImports = [];
+
+  $(`[${conditionManipulatorAttribute}]`).children().each((i, item) => {
+    const tagName = $(item)[0].name;
+    if (tagName.indexOf('-') > -1) {
+      if (dataIfWC[tagName]) {
+        dataIfWC[tagName] = dataIfWC[tagName]++;
+      } else {
+        dataIfWC[tagName] = 1;
+      }
+    }
+  });
+
   if ($(`[${conditionManipulatorAttribute}]`).attr(conditionManipulatorAttribute)) {
     $(`[${conditionManipulatorAttribute}]`).replaceWith(function replace() {
-      const conditionScope = $(this).attr(conditionManipulatorAttribute);
+      const conditionScope = $(this).attr(conditionManipulatorAttribute).replace(/{{/, '').replace(/}}/, '');
       let otherHTML = '';
-      const elseAttr = $(this).next().attr('data-else');
+      const elseAttr = $(this).next().attr(elseConditionManipulatorAttribute);
 
       if (typeof elseAttr !== typeof undefined && elseAttr !== false) {
         const otherattributes = enlistAttributes($(this).next()[0].attribs);
         otherHTML = `<${$(this).next()[0].name} ${otherattributes}>${$(this).next().html()}</${$(this).next()[0].name}>`;
         $(this).next().remove();
       }
+
+      $(this).children().each((i, item) => {
+        const tagName = $(item)[0].name;
+        if (tagName.indexOf('-') > -1) {
+          if (nonDataIfWC[tagName] === dataIfWC[tagName]) {
+            nonDataIfWC[tagName] = 0;
+            dataIfWC[tagName] = 0;
+            $(item).replaceWith(function addLazy() {
+              const attributes = enlistRawAttributes($(this)[0].attribs);
+              return `<lazy-element element="${$(this)[0].name}"><${$(this)[0].name} ${attributes}>${$(this).html()}</${$(this)[0].name}></lazy-element>`;
+            });
+            removeImports.push(tagName);
+          }
+        }
+      });
 
       const attributes = enlistAttributes($(this)[0].attribs);
       const successHTML = `<${$(this)[0].name} ${attributes}>${$(this).html()}</${$(this)[0].name}>`;
@@ -146,15 +221,16 @@ function buildLitCondition(parsedHTML) {
 
   const sanatizedHTML = $('body').html().replace(/=&gt;/g, '=>');
 
-  return sanatizedHTML;
+  return { conditionSortedHTML: sanatizedHTML, removeImports };
 }
 
 function processHTML(parsedHTML) {
-  const conditionSortedHTML = buildLitCondition(parsedHTML);
+  const booleanAttribHTML = buildLitBooleanAttribs(parsedHTML);
+  const { removeImports, conditionSortedHTML } = buildLitCondition(booleanAttribHTML);
   const arraySortedHTML = buildLitArrayMap(conditionSortedHTML);
   const htmlSupportedLiteral = bracesToLiterals(arraySortedHTML);
   const htmlChunk = printHTML(htmlSupportedLiteral);
-  return Promise.resolve(htmlChunk);
+  return Promise.resolve({ htmlChunk, removeImports });
 }
 
 function processCSS(parsedCSS) {
@@ -175,7 +251,7 @@ function processJS(parsedJS) {
 
 function buildShell(router, importsDir = './components/') {
   return Promise.resolve(`
-  import { LitElement, html, css, } from 'lit-element';
+  import { LitElement, html, css } from 'lit-element';
   import {Router} from '@vaadin/router';
   import dimport from 'dimport';
 

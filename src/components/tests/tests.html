@@ -97,8 +97,18 @@
     </article>
   </main>
 
+  <h2>Boolean Attribute</h2>
+  <div hidden="{{!this.showBox}}" class="articles">
+    <main data-foreach="{{listItem in this.list}}">
+      <article>
+        <h3>{{listItem.name}}</h3><a href="{{listItem.url}}">@{{listItem.handle}}</a>
+      </article>
+    </main>
+  </div>
+  <button @click="{{() => this._showMyBox()}}">Toggle Hidden</button>
+
   <h2>data-if Attribute</h2>
-  <div data-if="this.showBox" class="articles">
+  <div data-if="{{this.showBox}}" class="articles">
     <main data-foreach="{{listItem in this.list}}">
       <article>
         <h3>{{listItem.name}}</h3><a href="{{listItem.url}}">@{{listItem.handle}}</a>
@@ -111,6 +121,7 @@
   <br>
   <div data-if="this.showPara" class="articles">
     <p>Some Paragraph of Blue Pill</p>
+    <dynamic-import></dynamic-import>
   </div>
   <div data-else class="not-articles">
     <p>Some Paragraph of Red Pill</p>
@@ -124,6 +135,9 @@
   <button @click="{{() => this._showMyWall()}}">{{this.wallButtonText}}</button>
   <br>
   <br>
+  <h2>Event Linking</h2>
+  <p>{{this.boundText}}</p>
+  <input type="text" id="inputElement" value={{this.boundText}} @input="{{(e) => this.handleInputChange(e)}}">
   <br>
   <br>
   <br>

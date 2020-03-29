@@ -14,7 +14,8 @@
     "brace-style": 2,
     "class-methods-use-this":"off",
     "arrow-body-style":"off",
-    "no-console":"off"
+    "no-console":"off",
+    "no-plusplus":"off"
   },
   "overrides": [{
     "files": [ "src/components/*.js" ],

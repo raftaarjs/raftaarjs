@@ -63,6 +63,17 @@ function enlistAttributes(attribsObj) {
   return attributes;
 }
 
+function enlistRawAttributes(attribsObj) {
+  let attributes = '';
+  const entries = Object.entries(attribsObj);
+
+  for (const [attr, val] of entries) {
+    attributes += `${attr}="${val}" `;
+  }
+
+  return attributes;
+}
+
 function addFakeTag(parsedHTML) {
   const fakeElementPrefix = 'raftaar-fake-';
   return parsedHTML
@@ -112,6 +123,7 @@ module.exports = {
   bracesToLiterals,
   getForEachCondition,
   enlistAttributes,
+  enlistRawAttributes,
   addFakeTag,
   removeFakeTag,
 };

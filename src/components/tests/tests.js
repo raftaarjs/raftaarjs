@@ -1,10 +1,12 @@
 import './app-content';
+import './dynamic-import';
 
 this.title = 'Tests of Functionality';
 this.showBox = false;
 this.showPara = false;
 this.showWall = false;
 this.wallButtonText = 'Hit The Wall';
+this.boundText = 'Some text';
 
 this._showMyBox = () => {
   this.showBox = !this.showBox;
@@ -17,6 +19,15 @@ this._showMyPara = () => {
 this._showMyWall = () => {
   this.showWall = !this.showWall;
   this.wallButtonText = this.showWall ? 'Revive' : 'Hit The Wall';
+};
+
+this.inputElement = () => {
+  return this.shadowRoot.getElementById('inputElement');
+};
+
+this.handleInputChange = () => {
+  console.log('chage trigger', this.inputElement().value);
+  this.boundText = this.inputElement().value;
 };
 
 const baseArray = [
